@@ -50,3 +50,6 @@ test-results/
 # Misc
 *.swp
 *.swo
+
+
+browser_profile/

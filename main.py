@@ -1,5 +1,6 @@
 from config import EXCEL_FILE
 from src.excel_reader import ExcelReader
+from src.gui import RecipeAssistantGUI
 
 
 def main():
@@ -8,12 +9,9 @@ def main():
 
     recipes = reader.get_recipes()
 
-    print(f"\nTotal Recipes : {len(recipes)}\n")
+    app = RecipeAssistantGUI(recipes)
 
-    for recipe in recipes:
-        print("=" * 60)
-        print(recipe.recipe_name)
-        print(recipe.completed)
+    app.run()
 
 
 if __name__ == "__main__":
