@@ -1,0 +1,52 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Environment Variables
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Python Cache
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Logs
+logs/
+*.log
+
+# Downloads (temporary)
+downloads/
+
+# Generated Output
+output/
+
+# Excel files (optional)
+# Uncomment if you don't want to commit input files
+# input/*.xlsx
+
+# Playwright
+playwright-report/
+test-results/
+
+# Misc
+*.swp
+*.swo
