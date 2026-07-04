@@ -26,6 +26,8 @@ class RecipeAssistantGUI:
 
         self.copy_current_prompt()
 
+        self.bind_shortcuts()
+
     def build_ui(self):
 
         title = ctk.CTkLabel(
@@ -74,12 +76,12 @@ class RecipeAssistantGUI:
         )
         previous_btn.grid(row=0, column=0, padx=10)
 
-        downloaded_btn = ctk.CTkButton(
+        copy_btn = ctk.CTkButton(
             button_frame,
-            text="✅ Image Downloaded",
-            command=self.image_downloaded,
+            text="📋 Copy Prompt",
+            command=self.copy_prompt,
         )
-        downloaded_btn.grid(row=0, column=1, padx=10)
+        copy_btn.grid(row=0, column=1, padx=10)
 
         next_btn = ctk.CTkButton(
             button_frame,
@@ -88,12 +90,22 @@ class RecipeAssistantGUI:
         )
         next_btn.grid(row=0, column=2, padx=10)
 
+    def bind_shortcuts(self):
+
+        self.app.bind("<Return>", lambda e: self.next_prompt())
+
+        self.app.bind("<Right>", lambda e: self.next_prompt())
+
+        self.app.bind("<Left>", lambda e: self.previous_prompt())
+
+        self.app.bind("<Escape>", lambda e: self.app.destroy())
+
+        self.app.bind("<Control-c>", lambda e: self.copy_prompt())
+
     def copy_current_prompt(self):
 
         self.app.clipboard_clear()
-        self.app.clipboard_append(
-            self.manager.current_prompt()
-        )
+        self.app.clipboard_append(self.manager.current_prompt())
         self.app.update()
 
     def refresh(self):
@@ -114,30 +126,11 @@ class RecipeAssistantGUI:
         )
 
         self.prompt_box.delete("1.0", "end")
+
         self.prompt_box.insert(
             "1.0",
             self.manager.current_prompt(),
         )
-
-    def image_downloaded(self):
-
-        recipe = self.manager.current_recipe()
-
-        success, result = self.file_manager.save_image(
-            recipe.recipe_name,
-            self.manager.current_prompt_name(),
-        )
-
-        if success:
-            messagebox.showinfo(
-                "Success",
-                f"Saved to\n\n{result}",
-            )
-        else:
-            messagebox.showwarning(
-                "Warning",
-                result,
-            )
 
     def next_prompt(self):
 
@@ -154,6 +147,15 @@ class RecipeAssistantGUI:
         self.refresh()
 
         self.copy_current_prompt()
+
+    def copy_prompt(self):
+
+        self.copy_current_prompt()
+
+        messagebox.showinfo(
+            "Copied",
+            "Prompt copied to clipboard."
+        )
 
     def run(self):
 
