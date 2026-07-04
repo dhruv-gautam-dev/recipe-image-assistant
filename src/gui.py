@@ -1,6 +1,8 @@
 import customtkinter as ctk
+from tkinter import messagebox
 
 from src.prompt_manager import PromptManager
+from src.file_manager import FileManager
 
 
 class RecipeAssistantGUI:
@@ -8,6 +10,7 @@ class RecipeAssistantGUI:
     def __init__(self, recipes):
 
         self.manager = PromptManager(recipes)
+        self.file_manager = FileManager()
 
         ctk.set_appearance_mode("Dark")
         ctk.set_default_color_theme("blue")
@@ -71,12 +74,12 @@ class RecipeAssistantGUI:
         )
         previous_btn.grid(row=0, column=0, padx=10)
 
-        copy_btn = ctk.CTkButton(
+        downloaded_btn = ctk.CTkButton(
             button_frame,
-            text="📋 Copy Prompt",
-            command=self.copy_prompt,
+            text="✅ Image Downloaded",
+            command=self.image_downloaded,
         )
-        copy_btn.grid(row=0, column=1, padx=10)
+        downloaded_btn.grid(row=0, column=1, padx=10)
 
         next_btn = ctk.CTkButton(
             button_frame,
@@ -88,7 +91,9 @@ class RecipeAssistantGUI:
     def copy_current_prompt(self):
 
         self.app.clipboard_clear()
-        self.app.clipboard_append(self.manager.current_prompt())
+        self.app.clipboard_append(
+            self.manager.current_prompt()
+        )
         self.app.update()
 
     def refresh(self):
@@ -114,6 +119,26 @@ class RecipeAssistantGUI:
             self.manager.current_prompt(),
         )
 
+    def image_downloaded(self):
+
+        recipe = self.manager.current_recipe()
+
+        success, result = self.file_manager.save_image(
+            recipe.recipe_name,
+            self.manager.current_prompt_name(),
+        )
+
+        if success:
+            messagebox.showinfo(
+                "Success",
+                f"Saved to\n\n{result}",
+            )
+        else:
+            messagebox.showwarning(
+                "Warning",
+                result,
+            )
+
     def next_prompt(self):
 
         self.manager.next_prompt()
@@ -127,10 +152,6 @@ class RecipeAssistantGUI:
         self.manager.previous_prompt()
 
         self.refresh()
-
-        self.copy_current_prompt()
-
-    def copy_prompt(self):
 
         self.copy_current_prompt()
 

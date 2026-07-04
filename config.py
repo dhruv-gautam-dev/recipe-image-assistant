@@ -11,11 +11,3 @@ LOG_DIR = BASE_DIR / "logs"
 
 # Excel
 EXCEL_FILE = INPUT_DIR / "recipes.xlsx"
-
-# Browser
-BROWSER_PROFILE = BASE_DIR / "browser_profile"
-
-CHATGPT_URL = "https://chatgpt.com/"
-
-# URLs
-CHATGPT_URL = "https://chatgpt.com/"
