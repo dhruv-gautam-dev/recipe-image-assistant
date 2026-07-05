@@ -69,34 +69,23 @@ class RecipeAssistantGUI:
         button_frame = ctk.CTkFrame(self.app)
         button_frame.pack(pady=15)
 
-        previous_btn = ctk.CTkButton(
-            button_frame,
-            text="⬅ Previous",
-            command=self.previous_prompt,
-        )
-        previous_btn.grid(row=0, column=0, padx=10)
-
         copy_btn = ctk.CTkButton(
             button_frame,
             text="📋 Copy Prompt",
             command=self.copy_prompt,
+            width=180,
         )
-        copy_btn.grid(row=0, column=1, padx=10)
+        copy_btn.grid(row=0, column=0, padx=10)
 
-        next_btn = ctk.CTkButton(
+        downloaded_btn = ctk.CTkButton(
             button_frame,
-            text="Next ➜",
-            command=self.next_prompt,
+            text="✅ Image Downloaded",
+            command=self.image_downloaded,
+            width=220,
         )
-        next_btn.grid(row=0, column=2, padx=10)
+        downloaded_btn.grid(row=0, column=1, padx=10)
 
     def bind_shortcuts(self):
-
-        self.app.bind("<Return>", lambda e: self.next_prompt())
-
-        self.app.bind("<Right>", lambda e: self.next_prompt())
-
-        self.app.bind("<Left>", lambda e: self.previous_prompt())
 
         self.app.bind("<Escape>", lambda e: self.app.destroy())
 
@@ -132,17 +121,30 @@ class RecipeAssistantGUI:
             self.manager.current_prompt(),
         )
 
-    def next_prompt(self):
+    def image_downloaded(self):
 
-        self.manager.next_prompt()
+        recipe = self.manager.current_recipe()
 
-        self.refresh()
+        success, result = self.file_manager.save_image(
+            recipe.recipe_name,
+            self.manager.current_prompt_name(),
+        )
 
-        self.copy_current_prompt()
+        if not success:
+            messagebox.showwarning(
+                "Warning",
+                result,
+            )
+            return
 
-    def previous_prompt(self):
+        has_next = self.manager.next_prompt()
 
-        self.manager.previous_prompt()
+        if not has_next:
+            messagebox.showinfo(
+                "Completed",
+                "🎉 All recipes have been completed!"
+            )
+            return
 
         self.refresh()
 

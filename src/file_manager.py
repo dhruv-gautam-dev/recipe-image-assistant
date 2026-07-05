@@ -1,5 +1,6 @@
 from pathlib import Path
-import shutil
+
+from PIL import Image
 
 from config import DOWNLOAD_DIR, OUTPUT_DIR
 
@@ -7,9 +8,9 @@ from config import DOWNLOAD_DIR, OUTPUT_DIR
 class FileManager:
 
     IMAGE_NAMES = {
-        "Ingredients": "ingredients.png",
-        "Steps": "steps.png",
-        "Final Dish": "final.png",
+        "Ingredients": "ingredients",
+        "Steps": "steps",
+        "Final Dish": "final",
     }
 
     IMAGE_EXTENSIONS = {
@@ -36,6 +37,25 @@ class FileManager:
             key=lambda image: image.stat().st_mtime,
         )
 
+    def optimize_png(self, source, destination):
+
+        image = Image.open(source)
+
+        # Convert images with transparency correctly
+        if image.mode not in ("RGB", "RGBA"):
+            image = image.convert("RGBA")
+
+        image.save(
+            destination,
+            format="PNG",
+            optimize=True,
+            compress_level=9,
+        )
+
+        image.close()
+
+        source.unlink()
+
     def save_image(self, recipe_name, prompt_type):
 
         image = self.latest_image()
@@ -50,14 +70,15 @@ class FileManager:
             exist_ok=True,
         )
 
-        destination = (
-            recipe_folder /
-            self.IMAGE_NAMES[prompt_type]
+        destination_name = (
+            f"{recipe_name} {self.IMAGE_NAMES[prompt_type]}.png"
         )
 
-        shutil.move(
-            str(image),
-            str(destination),
+        destination = recipe_folder / destination_name
+
+        self.optimize_png(
+            image,
+            destination,
         )
 
         return True, destination

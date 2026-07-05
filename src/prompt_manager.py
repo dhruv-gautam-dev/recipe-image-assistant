@@ -26,17 +26,22 @@ class PromptManager:
 
         if self.prompt_index < 2:
             self.prompt_index += 1
+            return True
 
-        elif self.recipe_index < len(self.recipes) - 1:
+        if self.recipe_index < len(self.recipes) - 1:
             self.recipe_index += 1
             self.prompt_index = 0
+            return True
+
+        return False
 
     def previous_prompt(self):
 
         if self.prompt_index > 0:
             self.prompt_index -= 1
+            return
 
-        elif self.recipe_index > 0:
+        if self.recipe_index > 0:
             self.recipe_index -= 1
             self.prompt_index = 2
 
