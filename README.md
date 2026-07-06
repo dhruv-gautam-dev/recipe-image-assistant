@@ -163,6 +163,20 @@ recipe-image-assistant/
 
 ---
 
+
+
+## Screenshots
+
+### Application
+
+![Application](assets/app.png)
+
+### Output Structure
+
+![Output](assets/output.png)
+
+
+
 ## Installation
 
 Clone the repository.
